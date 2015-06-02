@@ -1,0 +1,19 @@
+<?php
+
+class ClockAngleTestCase extends DrupalUnitTestCase {
+    public static function getInfo() {
+        return array(
+            'name' => 'Clock Angle unit tests',
+            'description' => 'Test that the clock angle function works',
+            'group' => 'Examples',
+        );
+    }
+
+    function testClockAngleCalc() {
+        $result = clock_angle_calculate(12, 0);
+        $message = 'An input of 12:00 should return 0 deg';
+        $this->assertTrue($result, $message);
+    }
+}
+
+?>
