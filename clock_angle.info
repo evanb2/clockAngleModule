@@ -1,0 +1,6 @@
+name = Clock Angle
+description = Module that returns the angle of a clock given a certain time.
+package = Epicodus Examples
+core = 7.x
+files[] = clock_angle.module
+files[] = clock_angle.test

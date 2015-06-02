@@ -1,0 +1,55 @@
+<?php
+
+function clock_angle_menu() {
+    $items['clock_angle'] = array(
+        'title' => 'Clock Angle',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('clock_angle_form'),
+        'access callback' => TRUE,
+        'type' => MENU_NORMAL_ITEM,
+    );
+
+    $items['success'] = array(
+        'title' => 'Clock angle redirect success',
+        'page callback' => 'clock_angle_success',
+        'access callback' => TRUE,
+        'type' => MENU_CALLBACK,
+    );
+    return $items;
+}
+
+function clock_angle_form() {
+    $form['input'] = array(
+        '#title' => 'Enter Hours',
+        '#type' => 'textfield',
+        '#description' => t('Enter Hours'),
+        '#required' => TRUE,
+        '#element_validate' => array('element_validate_integer_positive', 'element_validate_hours_range'),
+    );
+    $form['input1'] = array(
+        '#title' => 'Enter Minutes',
+        '#type' => 'textfield',
+        '#description' => t('Enter minutes'),
+        '#required' => TRUE,
+        '#element_validate' => array('element_validate_integer_positive', 'element_validate_minutes_range'),
+
+    );
+    $form['submit'] = array(
+        '#type' => 'submit',
+        '#value' => 'Enter',
+    );
+    return $form;
+
+}
+
+function element_validate_hours_range($element) {
+    if ($element['#value'] > 12 || $element['#value'] < 0) {
+        form_error($element, t('Please enter a number between 1 and 12 (inclusive)'));
+    }
+}
+
+function element_validate_minutes_range($element) {
+    if ($element['#value'] > 59 || $element['#value'] < 0) {
+        form_error($element, t('Please eneter a number between 0 and 59 (inclusive)'));
+    }
+}
