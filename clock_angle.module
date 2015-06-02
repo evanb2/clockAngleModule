@@ -11,7 +11,7 @@ function clock_angle_menu() {
 
     $items['success'] = array(
         'title' => 'Clock angle redirect success',
-        'page callback' => 'clock_angle_success',
+        'page callback' => 'clock_angle_form_success',
         'access callback' => TRUE,
         'type' => MENU_CALLBACK,
     );
@@ -19,19 +19,19 @@ function clock_angle_menu() {
 }
 
 function clock_angle_form() {
-    $form['input'] = array(
+    $form['hours'] = array(
         '#title' => 'Enter Hours',
         '#type' => 'textfield',
         '#description' => t('Enter Hours'),
         '#required' => TRUE,
         '#element_validate' => array('element_validate_integer_positive', 'element_validate_hours_range'),
     );
-    $form['input1'] = array(
+    $form['minutes'] = array(
         '#title' => 'Enter Minutes',
         '#type' => 'textfield',
         '#description' => t('Enter minutes'),
         '#required' => TRUE,
-        '#element_validate' => array('element_validate_integer_positive', 'element_validate_minutes_range'),
+        '#element_validate' => array('element_validate_minutes_range'),
 
     );
     $form['submit'] = array(
@@ -52,4 +52,28 @@ function element_validate_minutes_range($element) {
     if ($element['#value'] > 59 || $element['#value'] < 0) {
         form_error($element, t('Please eneter a number between 0 and 59 (inclusive)'));
     }
+}
+
+function clock_angle_calculate($hours, $minutes) {
+    $hour = ($hours % 12) * 30 + ($minutes * 0.5);
+    $min = $minutes * 6;
+
+    $angle = abs($hour - $min);
+
+    if($angle > 180) {
+        $angle = 360 - $angle;
+    }
+
+    $output = 'Your clock will have a degree of separation of: ' . $angle . '&deg;';
+    return $output;
+}
+
+function clock_angle_form_submit($form, &$form_state) {
+    $_SESSION['output'] = clock_angle_calculate($form_state['values']['hours'], $form_state['values']['minutes']);
+
+    $form_state['redirect'] = 'success';
+}
+
+function clock_angle_form_success() {
+    return $_SESSION['output'];
 }
